@@ -1,180 +1,87 @@
-# IntelliView Orchestrator Architecture
+# Architecture — IntelliView Orchestrator
 
-## Overview
+## 1. System Overview
 
-IntelliView Orchestrator is an AI-powered interview management platform that automates interview scheduling, candidate evaluation, real-time monitoring, and reporting.
+IntelliView Orchestrator is a distributed AI interview processing platform built around a FastAPI API, PostgreSQL persistence, Redis-backed state and task coordination, Celery workers, and a Next.js frontend.
 
-The platform follows a distributed architecture where the frontend communicates with a FastAPI backend, which manages interview sessions, databases, AI services, and background workers.
+The repository separates the application into the following major areas:
+
+- `orchestrator/` — core interview orchestration, session management, worker management, security, fault handling, scheduling, caching, and state synchronization.
+- `routers/` — FastAPI API route modules for candidates, sessions, questions, templates, workers, administration, health, and metrics.
+- `workers/` — Celery-based background processing for interview evaluation, AI processing, video/audio processing, risk analysis, and worker execution.
+- `database/` — SQLAlchemy database configuration and models plus the database schema and persistence helpers.
+- `frontend/` — Next.js web application and reusable UI components.
+- `monitoring/` — Prometheus metrics, monitoring APIs, dashboard, WebSocket management, and monitoring configuration.
+- `cv_service/` — separate service for CV/resume processing.
+- `Digest-Notifications/` — notification digest service.
+- `retrieval/` — document retrieval and embedding/indexing functionality.
+- `tests/` — unit, integration, contract, regression, and end-to-end test coverage.
 
 ---
 
-## High-Level Architecture
+## 2. Runtime Architecture
 
 ```mermaid
-graph TD
-A[Next.js Frontend] --> B[FastAPI Backend]
-B --> C[(PostgreSQL)]
-B --> D[(Redis)]
-B --> E[Celery Workers]
-E --> F[Gemini API]
-E --> G[OpenAI API]
-```
+flowchart TD
+    USER[User / HR / Candidate]
+
+    subgraph FRONTEND["Frontend"]
+        FE[Next.js Frontend<br/>Port 3000]
+    end
+
+    subgraph API["Application API"]
+        FASTAPI[FastAPI<br/>Port 8000]
+        ROUTERS[FastAPI Routers]
+        ORCH[Orchestrator]
+    end
+
+    subgraph DATA["Data & Coordination"]
+        PG[(PostgreSQL 15<br/>Port 5432)]
+        REDIS[(Redis 7<br/>Port 6379)]
+    end
+
+    subgraph WORKERS["Background Processing"]
+        CELERY[Celery Workers]
+        VIDEO[Video Pipeline]
+        AUDIO[Audio Pipeline]
+        EVAL[Evaluation Pipeline]
+        RISK[Risk Scoring Engine]
+    end
+
+    subgraph SERVICES["Supporting Services"]
+        CV[CV Service<br/>Port 8001]
+        DIGEST[Digest Notifications<br/>Port 8080]
+    end
+
+    subgraph OBS["Observability"]
+        PROM[Prometheus<br/>Port 9090]
+        GRAFANA[Grafana<br/>Port 3001]
+        FLOWER[Flower<br/>Port 5555]
+        JAEGER[Jaeger<br/>Port 16686]
+    end
+
+    USER --> FE
+    FE -->|HTTP / REST| FASTAPI
+    FE -->|WebSocket| FASTAPI
+
+    FASTAPI --> ROUTERS
+    ROUTERS --> ORCH
+
+    ORCH --> PG
+    ORCH --> REDIS
+    ORCH --> CELERY
+
+    CELERY --> VIDEO
+    CELERY --> AUDIO
+    CELERY --> EVAL
+    CELERY --> RISK
+
+    CELERY --> CV
+    FASTAPI --> DIGEST
+
+    ORCH --> PROM
+    CELERY --> PROM
+    REDIS --> FLOWER
+    PROM --> GRAFANA
+    FASTAPI --> JAEGER
 
-
-## Main Components
-
-### Frontend
-
-- Built using Next.js
-
-- Provides dashboard interface
-
-- Displays candidate information
-
-- Shows interview progress
-
-- Connects to backend APIs
-
----
-
-### Backend
-
-The backend is built using FastAPI.
-
-Responsibilities include:
-
-- User authentication
-
-- Session management
-
-- Candidate management
-
-- AI orchestration
-
-- Request validation
-
-- Logging
-
-- Monitoring
-
-- API routing
-
----
-
-### Database
-
-PostgreSQL stores:
-
-- Candidates
-
-- Interview Sessions
-
-- Question Bank
-
-- Interview Templates
-
-- Evaluation Results
-
-SQLAlchemy ORM is used for database operations.
-
----
-
-### Redis
-
-Redis is used for:
-
-- Caching
-
-- Session storage
-
-- Celery message broker
-
-- Fast data access
-
----
-
-### Worker Services
-
-Background workers perform:
-
-- Audio analysis
-
-- Video analysis
-
-- AI evaluation
-
-- Risk scoring
-
-- Report generation
-
----
-
-### AI Providers
-
-The project supports multiple AI providers.
-
-- Google Gemini
-
-- OpenAI
-
-- Grok
-
-Fallback logic allows another provider to be used if one becomes unavailable.
-
----
-
-### Monitoring
-
-The project includes:
-
-- Prometheus metrics
-
-- Grafana dashboards
-
-- Health monitoring
-
-- Structured logging
-
----
-
-## Workflow
-
-1. Candidate starts interview.
-
-2. Frontend sends request to FastAPI.
-
-3. Backend creates interview session.
-
-4. Session is stored in PostgreSQL.
-
-5. Workers process audio/video.
-
-6. AI evaluates responses.
-
-7. Results are saved.
-
-8. Dashboard displays live updates.
-
----
-
-## Technologies Used
-
-- Python
-
-- FastAPI
-
-- Next.js
-
-- PostgreSQL
-
-- SQLAlchemy
-
-- Redis
-
-- Celery
-
-- Docker
-
-- Prometheus
-
-- Grafana
