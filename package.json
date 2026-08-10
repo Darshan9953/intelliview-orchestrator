@@ -1,0 +1,19 @@
+{
+  "name": "intelliview-orchestrator",
+  "private": true,
+  "version": "0.3.0",
+  "description": "Release tooling for the IntelliView orchestrator project",
+  "scripts": {
+    "release": "semantic-release"
+  },
+  "devDependencies": {
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/commit-analyzer": "^13.0.0",
+    "@semantic-release/exec": "^7.0.0",
+    "@semantic-release/git": "^10.0.0",
+    "@semantic-release/github": "^11.0.0",
+    "@semantic-release/release-notes-generator": "^14.0.0",
+    "conventional-changelog-conventionalcommits": "^8.0.0",
+    "semantic-release": "^24.1.0"
+  }
+}
