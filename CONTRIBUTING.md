@@ -83,6 +83,47 @@ Types: `feat`, `fix`, `docs`, `test`, `refactor`, `perf`, `chore`,
 `ci`, `build`. Scopes: `orchestrator`, `workers`, `monitoring`,
 `database`, `frontend`, `ci`, `docs`.
 
+### Examples
+
+```bash
+feat: add interview scheduling
+fix: resolve login validation
+chore: update dependencies
+docs: add release notes guidance
+refactor: simplify worker registry
+test: cover retry manager edge cases
+```
+
+Use a subject that explains the user-facing or technical change in the
+present tense and keep it short. If a change affects a release, add the
+relevant entry to `CHANGELOG.md` under the matching section.
+
+## Release notes and changelog workflow
+
+This project maintains a changelog in `CHANGELOG.md` using the
+[Keep a Changelog](https://keepachangelog.com/en/1.1.0/) structure.
+Every notable change should be placed in the current `Unreleased` section
+before a merge to `main`.
+
+### Change groups
+
+- `Added` — new features, capabilities, or integrations.
+- `Changed` — behavior adjustments or improvements.
+- `Fixed` — bug fixes and defect resolution.
+- `Maintenance` or `Docs` — ongoing upkeep, documentation, and tooling.
+
+This keeps release notes readable and allows automated tooling to
+summarize versions consistently.
+
+### Release-practice guidance
+
+- Keep commit messages specific and conventional.
+- Group related changes in a single PR when possible.
+- Update `CHANGELOG.md` when the change is user-visible or affects the
+  release process.
+- Use the changelog as the source of truth for release notes and version
+  summaries before publishing a tagged release.
+
 ## Reporting security issues
 
 See `SECURITY.md` for the disclosure policy. **Do not file public issues

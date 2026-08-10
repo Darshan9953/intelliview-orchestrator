@@ -46,6 +46,12 @@ project adheres to [Semantic Versioning](https://semver.org/).
 - `RiskScoringEngine` was always returning 0.0 because pipelines returned
   empty booleans; now produces a non-trivial per-session signal.
 
+### Documentation
+- Added contributor guidance for the traditional changelog workflow and
+  Conventional Commit standards used for release-note generation.
+- Documented how important changes should be grouped under Added,
+  Changed, Fixed, and Maintenance for future releases.
+
 ## [0.2.0] - 2026-06-21
 
 ### Added
