@@ -164,6 +164,41 @@ X-API-Token: api123
 Authentication is enforced through the `require_token` dependency for protected API endpoints.
 
 
+## Automated Releases
+
+This repository uses Semantic Release to automate versioning and publishing from the main branch.
+
+- **Semantic Release** analyzes conventional commits, calculates the next semantic version, and creates releases automatically.
+- **Conventional Commits** are the source of truth for release bumps. Commit messages such as `feat:`, `fix:`, `perf:`, and `refactor:` drive the version decision, while docs, tests, chores, CI, and build-only commits are tracked without creating a user-facing release bump.
+- **Automatic versioning** follows Semantic Versioning rules: major for breaking changes, minor for new features, and patch for fixes and related updates.
+- **Automatic GitHub Releases** are created when the release workflow runs on `main`, including a generated tag and release notes.
+- **Automatic changelog generation** updates `CHANGELOG.md` with the release summary and commits the generated change back to the repository.
+- **How developers should create commits**: use clear conventional commit prefixes like `feat: add dashboard filter`, `fix: resolve redis timeout`, `docs: update API examples`, or `ci: add smoke test workflow`. Keep the subject short and descriptive so Semantic Release can determine the proper version bump.
+
+The release flow is:
+
+```text
+Commit
+  ↓
+Push
+  ↓
+Pull Request
+  ↓
+Merge into main
+  ↓
+GitHub Actions
+  ↓
+semantic-release
+  ↓
+Version created
+  ↓
+CHANGELOG updated
+  ↓
+GitHub Release created
+  ↓
+Release Notes generated automatically
+```
+
 ## License
 
 MIT — [Rajat Kumar](https://github.com/rajat-wyrm)
