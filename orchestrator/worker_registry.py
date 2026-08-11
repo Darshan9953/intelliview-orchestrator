@@ -499,6 +499,7 @@ class WorkerRegistry:
         available = []
 
         from datetime import datetime, timedelta, timezone
+
         from orchestrator.time_utils import utcnow
 
         timeout_threshold = utcnow() - timedelta(seconds=self.HEARTBEAT_TIMEOUT)

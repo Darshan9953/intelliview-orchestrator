@@ -13,6 +13,7 @@ Verifies:
 """
 
 from unittest.mock import MagicMock, patch
+
 import pytest
 
 from workers.audio_pipeline import (
