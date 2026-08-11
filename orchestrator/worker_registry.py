@@ -493,8 +493,9 @@ class WorkerRegistry:
 
         def get_available_workers(self) -> list[dict[str, Any]]:
             """
-        list: Available worker details
-        """
+            list: Available worker details
+            """
+
         available = []
 
         from datetime import datetime, timedelta, timezone
@@ -513,13 +514,13 @@ class WorkerRegistry:
                     if last_hb.tzinfo is None:
                         last_hb = last_hb.replace(tzinfo=timezone.utc)
 
-                    if (
-                        last_hb >= timeout_threshold
-                        and worker.get("active_tasks", 0) < worker.get("capacity", 0)
-                    ):
+                    if last_hb >= timeout_threshold and worker.get(
+                        "active_tasks", 0
+                    ) < worker.get("capacity", 0):
                         available.append(worker)
 
         return available
+
     def get_least_loaded_worker(self) -> dict[str, Any] | None:
         """
         Get the worker with the lowest active task count
