@@ -491,14 +491,10 @@ class WorkerRegistry:
         with self.lock:
             return dict(self.local_workers)
 
-        def get_available_workers(self) -> list[dict[str, Any]]:
-            """
-            list: Available worker details
-            """
+    def get_available_workers(self) -> list[dict[str, Any]]:
+        """Return healthy workers with remaining capacity and a recent heartbeat."""
 
         available = []
-
-        from datetime import datetime, timedelta, timezone
 
         from orchestrator.time_utils import utcnow
 
